@@ -12,6 +12,7 @@ def index(request):
         description_full = place.description_long
         lat = place.lat
         lon = place.lon
+
         features.append({
             "type": "Feature",
             "geometry": {
@@ -26,5 +27,9 @@ def index(request):
             }
 
         })
-    print(features)
+    content = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+    print(content)
     return render(request, 'index.html')
