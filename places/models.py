@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import mark_safe
 
 
 class Place(models.Model):
@@ -15,6 +16,9 @@ class Place(models.Model):
 class Image(models.Model):
     image = models.ImageField(upload_to='media/')
     place = models.ForeignKey(Place, verbose_name='Place', on_delete=models.CASCADE, related_name='images')
+
+    def image_preview(self):
+        return mark_safe(f'<img src = "{self.image.url}" width = "200"/>')
 
     def __str__(self):
         return self.place.title
