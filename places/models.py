@@ -18,8 +18,12 @@ class Image(models.Model):
     position = models.PositiveIntegerField(default=0, db_index=True)
     place = models.ForeignKey(Place, verbose_name='Place', on_delete=models.CASCADE, related_name='images')
 
+    class Meta:
+        ordering = ['position']
+
     def image_preview(self):
         return mark_safe(f'<img src = "{self.image.url}" width = "150"/>')
+
 
     def __str__(self):
         return self.place.title
