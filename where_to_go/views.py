@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from places.models import Place, Image
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 
 def place_detail(request, place):
-    place = Place.objects.get(pk=place)
+    place = get_object_or_404(Place, id=place)
     details = {
         "title": place.title,
         "imgs": [image.image.url for image in place.images.all()],
@@ -15,26 +16,23 @@ def place_detail(request, place):
             "lat": str(place.lat)
         }
     }
-    return JsonResponse(details, safe=False)
+    return JsonResponse(details, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
 def index(request):
     places = Place.objects.all()
     features = []
     for place in places:
-        title = place.title
-        lat = place.lat
-        lon = place.lon
         features.append({
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": [lon, lat]
+                "coordinates": [place.lon, place.lat]
             },
             "properties": {
-                "title": title,
+                "title": place.title,
                 "placeId": place.id,
-                "detailsUrl": place.id
+                "detailsUrl": f'places/{place.id}'
             }
         })
     context = {"places": {
