@@ -1,6 +1,21 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from places.models import Place, Image
+from django.http import JsonResponse
+
+
+def place_detail(request, place):
+    place = Place.objects.get(pk=place)
+    details = {
+        "title": place.title,
+        "imgs": [image.image.url for image in place.images.all()],
+        "description_short": place.description_short,
+        "description_long": place.description_long,
+        "coordinates": {
+            "lng": str(place.lon),
+            "lat": str(place.lat)
+        }
+    }
+    return JsonResponse(details, safe=False)
 
 
 def index(request):
@@ -8,28 +23,22 @@ def index(request):
     features = []
     for place in places:
         title = place.title
-        description = place.description_short
-        description_full = place.description_long
         lat = place.lat
         lon = place.lon
-
         features.append({
             "type": "Feature",
             "geometry": {
                 "type": "Point",
                 "coordinates": [lon, lat]
             },
-
             "properties": {
                 "title": title,
-                "placeId": "test",
-                "detailsUrl": {}
+                "placeId": place.id,
+                "detailsUrl": place.id
             }
-
         })
-    content = {
+    context = {"places": {
         "type": "FeatureCollection",
         "features": features
-    }
-    print(content)
-    return render(request, 'index.html')
+    }}
+    return render(request, 'index.html', context)
