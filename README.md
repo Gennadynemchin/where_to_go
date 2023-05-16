@@ -5,7 +5,7 @@ The web site about interesting places in your city
 ![app_screen.jpeg](./app_screen.jpeg)
 
 ## Demo version on Pythonanywhere
-Avaliable here: [WhereToGo](https://pythonanywhere.com/)
+Avaliable here: [WhereToGo](https://genapoliss.pythonanywhere.com/)
 
 ## How to run
 
@@ -39,3 +39,4 @@ Available variables:
 - `SESSION_COOKIE_SECURE` — 
 - `CSRF_COOKIE_SECURE` —
 - `SECURE_SSL_REDIRECT` —
+
