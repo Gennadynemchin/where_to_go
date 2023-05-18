@@ -29,4 +29,4 @@ class Command(BaseCommand):
             # image = Image_saver.open(BytesIO(image_request.content))
             new_image = Image.objects.create(position=1, place=new_place)
             new_image.image.save(content=ContentFile(image_request.content), name=str(time()), save=True)
-            self.stdout.write(self.style.SUCCESS('Successfully saved'))
+            self.stdout.write(self.style.SUCCESS(f'Successfully saved {new_image}'))
