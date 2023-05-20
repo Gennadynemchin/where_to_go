@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('places', '0005_alter_image_position'),
+        ("places", "0005_alter_image_position"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='image',
-            options={'ordering': ['position']},
+            name="image",
+            options={"ordering": ["position"]},
         ),
     ]

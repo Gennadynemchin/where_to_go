@@ -12,32 +12,27 @@ def place_detail(request, place):
         "imgs": [image.image.url for image in place.images.all()],
         "description_short": place.description_short,
         "description_long": place.description_long,
-        "coordinates": {
-            "lng": str(place.lon),
-            "lat": str(place.lat)
-        }
+        "coordinates": {"lng": str(place.lon), "lat": str(place.lat)},
     }
-    return JsonResponse(details, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 2})
+    return JsonResponse(
+        details, safe=False, json_dumps_params={"ensure_ascii": False, "indent": 2}
+    )
 
 
 def index(request):
     places = Place.objects.all()
     features = []
     for place in places:
-        features.append({
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [place.lon, place.lat]
-            },
-            "properties": {
-                "title": place.title,
-                "placeId": place.id,
-                "detailsUrl": reverse('places', kwargs={'place': place.id})
+        features.append(
+            {
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [place.lon, place.lat]},
+                "properties": {
+                    "title": place.title,
+                    "placeId": place.id,
+                    "detailsUrl": reverse("places", kwargs={"place": place.id}),
+                },
             }
-        })
-    context = {"places": {
-        "type": "FeatureCollection",
-        "features": features
-    }}
-    return render(request, 'index.html', context)
+        )
+    context = {"places": {"type": "FeatureCollection", "features": features}}
+    return render(request, "index.html", context)
