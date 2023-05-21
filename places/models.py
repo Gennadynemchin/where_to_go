@@ -25,7 +25,7 @@ class Image(models.Model):
         ordering = ["position"]
 
     def image_preview(self):
-        return mark_safe(f'<img src = "{self.image.url}" width = "150"/>')
+        return mark_safe(f'<img src = "{self.image.url}" height = "150"/>')
 
     def __str__(self):
         return self.place.title

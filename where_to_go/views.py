@@ -12,7 +12,7 @@ def place_detail(request, place):
         "imgs": [image.image.url for image in place.images.all()],
         "description_short": place.description_short,
         "description_long": place.description_long,
-        "coordinates": {"lng": str(place.lon), "lat": str(place.lat)},
+        "coordinates": {"lng": place.lon, "lat": place.lat},
     }
     return JsonResponse(
         details, safe=False, json_dumps_params={"ensure_ascii": False, "indent": 2}

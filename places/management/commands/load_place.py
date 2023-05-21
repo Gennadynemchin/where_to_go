@@ -16,7 +16,7 @@ class Command(BaseCommand):
         content = response.json()
         try:
             images = content["imgs"]
-            new_place, created = Place.objects.get_or_create(
+            place, created = Place.objects.get_or_create(
                 title=content["title"],
                 description_short=content["description_short"],
                 description_long=content["description_long"],
@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 image_file = ContentFile(image_request.content)
                 image_name = os.path.basename(urlparse(image_url).path)
                 new_image, created = Image.objects.get_or_create(
-                    position=image_count, place=new_place
+                    position=image_count, place=place
                 )
                 new_image.image.save(content=image_file, name=image_name, save=True)
                 self.stdout.write(
