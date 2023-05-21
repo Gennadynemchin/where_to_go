@@ -19,14 +19,6 @@ git clone https://github.com/Gennadynemchin/where_to_go.git
 ```bash
 pip install -r requirements.txt
 ```
-- Then make migrations:
-```bash
-python manage.py migrate
-```
-- Run server:
-```bash
-python manage.py runserver
-```
 
 ## Env vars
 Some of app settings placed in enviroment variables. For use them rename the `example.env` to `.env`
@@ -39,6 +31,15 @@ Available variables:
 - `SESSION_COOKIE_SECURE` — 
 - `CSRF_COOKIE_SECURE` —
 - `SECURE_SSL_REDIRECT` —
+
+- Then make migrations:
+```bash
+python manage.py migrate
+```
+- Run server:
+```bash
+python manage.py runserver
+```
 
 ## How to load places
 Use custom command (replace PLACE_URL to requested .json file):
