@@ -28,9 +28,9 @@ Available variables:
 - `SECRET_KEY` — Secret key of your project;
 - `DEBUG_STATUS` — Debug mode;
 - `ALLOWED_HOSTS` — Please follow to the link for additional information: [Django docs](https://docs.djangoproject.com/en/4.2/ref/settings/#allowed-hosts).
-- `SESSION_COOKIE_SECURE` — 
-- `CSRF_COOKIE_SECURE` —
-- `SECURE_SSL_REDIRECT` —
+- `SESSION_COOKIE_SECURE` — Please follow to the link for additional information: [Django docs](https://docs.djangoproject.com/en/4.2/ref/settings/#session-cookie-secure)
+- `CSRF_COOKIE_SECURE` — Please follow to the link for additional information: [Django docs](https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-cookie-secure)
+- `SECURE_SSL_REDIRECT` — Please follow to the link for additional information: [Django docs](https://django-secure.readthedocs.io/en/v0.1.1/settings.html#secure-ssl-redirect)
 
 - Then make migrations:
 ```bash
