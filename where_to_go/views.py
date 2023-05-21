@@ -5,8 +5,8 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
 
-def place_detail(request, place):
-    place = get_object_or_404(Place, id=place)
+def place_detail(request, id):
+    place = get_object_or_404(Place, id=id)
     details = {
         "title": place.title,
         "imgs": [image.image.url for image in place.images.all()],
@@ -30,7 +30,7 @@ def index(request):
                 "properties": {
                     "title": place.title,
                     "placeId": place.id,
-                    "detailsUrl": reverse("places", kwargs={"place": place.id}),
+                    "detailsUrl": reverse("places", kwargs={"id": place.id}),
                 },
             }
         )
