@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Place, Image
-from django.utils.html import mark_safe
+from django.utils.html import format_html
 from adminsortable2.admin import SortableStackedInline, SortableAdminBase
 
 
@@ -9,8 +9,7 @@ class ImageStackedInline(SortableStackedInline):
     readonly_fields = ["image_preview"]
 
     def image_preview(self, obj):
-        return mark_safe(f'<img src = "{obj.image.url}" height = "150"/>')
-
+        return format_html("<img src = {} height = '150'/>", obj.image.url)
 
 @admin.register(Place)
 class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
