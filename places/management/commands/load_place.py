@@ -43,9 +43,13 @@ class Command(BaseCommand):
                     new_image.image.save(content=image_file, name=image_name, save=True)
                     self.stdout.write(
                         self.style.SUCCESS(
-                            f'Successfully saved image {image_name} for place {content["title"]}, {created}'
+                            f'Successfully saved image {image_name} for place {content["title"]}'
                         )
                     )
-            self.stdout.write(
-                self.style.SUCCESS(f'Successfully saved place {content["title"]}')
-            )
+            if created:
+                self.stdout.write(
+                    self.style.SUCCESS(f'Successfully saved place {content["title"]}')
+                )
+            else:
+                self.stdout.write(
+                    self.style.WARNING(f'The place {content["title"]} has not been saved.'))
