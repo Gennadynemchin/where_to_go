@@ -46,6 +46,6 @@ class Command(BaseCommand):
                             f'Successfully saved image {image_name} for place {content["title"]}, {created}'
                         )
                     )
-        self.stdout.write(
-            self.style.SUCCESS(f'Successfully saved place {content["title"]}')
-        )
+            self.stdout.write(
+                self.style.SUCCESS(f'Successfully saved place {content["title"]}')
+            )
