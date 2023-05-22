@@ -27,9 +27,9 @@ class Command(BaseCommand):
             place, created = Place.objects.get_or_create(
                 title=place_title,
                 description_short=place_desc_short,
-                description_long=place_desc_long,
-                lat=place_lat,
-                lon=place_lng,
+                defaults={"description_long": place_desc_long,
+                          "lat": place_lat,
+                          "lon": place_lng}
             )
             if place_images:
                 for image_count, image_url in enumerate(place_images):
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                     new_image.image.save(content=image_file, name=image_name, save=True)
                     self.stdout.write(
                         self.style.SUCCESS(
-                            f'Successfully saved image {image_name} for place {content["title"]}'
+                            f'Successfully saved image {image_name} for place {content["title"]}, {created}'
                         )
                     )
         self.stdout.write(
