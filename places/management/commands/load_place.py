@@ -8,11 +8,10 @@ from django.core.files.base import ContentFile
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("download_link", nargs="?", type=str)
+        parser.add_argument("download_link", type=str)
 
     def handle(self, *args, **options):
         response = requests.get(options["download_link"])
-
         response.raise_for_status()
         content = response.json()
         place_images = content.get("imgs", [])
