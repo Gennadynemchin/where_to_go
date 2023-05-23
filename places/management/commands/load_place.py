@@ -1,9 +1,9 @@
 import os
-import requests
 from urllib.parse import urlparse
-from places.models import Place, Image
+import requests
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
+from places.models import Place, Image
 
 
 class Command(BaseCommand):
@@ -15,14 +15,18 @@ class Command(BaseCommand):
         response.raise_for_status()
         content = response.json()
         place_images = content.get("imgs", [])
-        place_desc_short = content.get("description_short", "Short description should be filled out later")
-        place_desc_long = content.get("description_long", "Full description should be filled out later")
+        place_desc_short = content.get("description_short",
+                                       "Short description should be filled out later")
+        place_desc_long = content.get("description_long",
+                                      "Full description should be filled out later")
         try:
             place_title = content["title"]
             place_lat = content["coordinates"]["lat"]
             place_lng = content["coordinates"]["lng"]
         except KeyError:
-            self.stdout.write(self.style.WARNING("Wrong JSON format. The place will no be added to database."))
+            self.stdout.write(self.style.WARNING("Wrong JSON format."
+                                                 " The place will no be added to database.")
+                              )
         else:
             place, created = Place.objects.get_or_create(
                 title=place_title,
@@ -52,5 +56,7 @@ class Command(BaseCommand):
                 )
             else:
                 self.stdout.write(
-                    self.style.WARNING(f'The place {content["title"]} has not been saved. Probably it`s already exists')
+                    self.style.WARNING(f'The place {content["title"]}'
+                                       f' has not been saved. Probably it`s already exists'
+                                       )
                 )
