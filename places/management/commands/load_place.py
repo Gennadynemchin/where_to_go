@@ -25,13 +25,13 @@ class Command(BaseCommand):
             place_lng = content["coordinates"]["lng"]
         except KeyError:
             self.stdout.write(self.style.WARNING("Wrong JSON format."
-                                                 " The place will no be added to database.")
+                                                 " The place will not be added to database.")
                               )
         else:
             place, created = Place.objects.get_or_create(
                 title=place_title,
-                description_short=place_desc_short,
-                defaults={"description_long": place_desc_long,
+                defaults={"description_short": place_desc_short,
+                          "description_long": place_desc_long,
                           "lat": place_lat,
                           "lon": place_lng}
             )

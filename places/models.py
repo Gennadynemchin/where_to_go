@@ -24,4 +24,4 @@ class Image(models.Model):
         ordering = ["position"]
 
     def __str__(self):
-        return self.place.title
+        return str(self.id)
