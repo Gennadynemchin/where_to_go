@@ -25,36 +25,38 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("Wrong JSON format."
                                                  " The place will not be added to database.")
                               )
-        else:
-            place, created = Place.objects.get_or_create(
-                title=place_title,
-                defaults={"description_short": place_desc_short,
-                          "description_long": place_desc_long,
-                          "lat": place_lat,
-                          "lon": place_lng}
+            return
+
+        place, created = Place.objects.get_or_create(
+            title=place_title,
+            defaults={"description_short": place_desc_short,
+                      "description_long": place_desc_long,
+                      "lat": place_lat,
+                      "lon": place_lng}
+        )
+        if created:
+            self.stdout.write(
+                self.style.SUCCESS(f'Successfully saved place {content["title"]}')
             )
-            if place_images:
-                for image_count, image_url in enumerate(place_images):
-                    image_request = requests.get(image_url)
-                    image_request.raise_for_status()
-                    image_file = ContentFile(image_request.content)
-                    image_name = os.path.basename(urlparse(image_url).path)
-                    new_image, created = Image.objects.get_or_create(
-                        position=image_count, place=place
-                    )
-                    new_image.image.save(content=image_file, name=image_name, save=True)
-                    self.stdout.write(
-                        self.style.SUCCESS(
-                            f'Successfully saved image {image_name} for place {content["title"]}'
-                        )
-                    )
-            if created:
-                self.stdout.write(
-                    self.style.SUCCESS(f'Successfully saved place {content["title"]}')
+            for image_count, image_url in enumerate(place_images):
+                image_request = requests.get(image_url)
+                image_request.raise_for_status()
+                image_file = ContentFile(image_request.content)
+                image_name = os.path.basename(urlparse(image_url).path)
+                new_image, created = Image.objects.get_or_create(
+                    position=image_count, place=place
                 )
-            else:
+                new_image.image.save(content=image_file, name=image_name, save=True)
                 self.stdout.write(
-                    self.style.WARNING(f'The place {content["title"]}'
-                                       f' has not been saved. Probably it`s already exists'
-                                       )
+                    self.style.SUCCESS(
+                        f'Successfully saved image {image_name} for place {content["title"]}'
+                    )
                 )
+        else:
+            self.stdout.write(
+                self.style.WARNING(f'The place {content["title"]}'
+                                   f' has not been saved. Probably it`s already exists'
+                                   )
+            )
+
+
