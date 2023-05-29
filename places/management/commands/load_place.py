@@ -15,10 +15,8 @@ class Command(BaseCommand):
         response.raise_for_status()
         content = response.json()
         place_images = content.get("imgs", [])
-        place_desc_short = content.get("description_short",
-                                       "Short description should be filled out later")
-        place_desc_long = content.get("description_long",
-                                      "Full description should be filled out later")
+        place_desc_short = content.get("description_short", "")
+        place_desc_long = content.get("description_long", "")
         try:
             place_title = content["title"]
             place_lat = content["coordinates"]["lat"]
