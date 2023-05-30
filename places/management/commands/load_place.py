@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 image_request.raise_for_status()
                 image_name = os.path.basename(urlparse(image_url).path)
                 image_file = ContentFile(image_request.content, name=image_name)
-                new_image, created = Image.objects.get_or_create(
+                Image.objects.get_or_create(
                     position=image_count, place=place, image=image_file
                 )
                 self.stdout.write(
