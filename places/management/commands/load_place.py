@@ -41,12 +41,11 @@ class Command(BaseCommand):
             for image_count, image_url in enumerate(place_images):
                 image_request = requests.get(image_url)
                 image_request.raise_for_status()
-                image_file = ContentFile(image_request.content)
                 image_name = os.path.basename(urlparse(image_url).path)
+                image_file = ContentFile(image_request.content, name=image_name)
                 new_image, created = Image.objects.get_or_create(
-                    position=image_count, place=place
+                    position=image_count, place=place, image=image_file
                 )
-                new_image.image.save(content=image_file, name=image_name, save=True)
                 self.stdout.write(
                     self.style.SUCCESS(
                         f'Successfully saved image {image_name} for place {content["title"]}'
