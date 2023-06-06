@@ -39,9 +39,6 @@ class Command(BaseCommand):
                 "lon": place_lng,
                      },
         )
-        self.stdout.write(
-            self.style.SUCCESS(f"Successfully saved place {place_title}")
-        )
         return {
             "created": created,
             "place_images": place_images,
@@ -61,7 +58,7 @@ class Command(BaseCommand):
                     f"Successfully saved image {image_name} for place {place.title}"
                 )
             )
-            return image_name
+        return image_name
 
     def handle(self, *args, **options):
         place_content = self.get_place_content(options["download_link"])
@@ -72,11 +69,14 @@ class Command(BaseCommand):
         place_title = place_data["place_title"]
         place = place_data["place"]
 
-        if created:
-            self.save_images(place_images, place)
-        else:
+        if not created:
             self.stdout.write(
                 self.style.WARNING(
                     f"The place {place_title} has not been saved. Probably it`s already exists"
                 )
             )
+            return
+        self.stdout.write(
+            self.style.SUCCESS(f"Successfully saved place {place_title}")
+        )
+        self.save_images(place_images, place)
