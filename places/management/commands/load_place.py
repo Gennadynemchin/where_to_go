@@ -10,10 +10,12 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("download_link", type=str)
 
-    def handle(self, *args, **options):
-        response = requests.get(options["download_link"])
+    def get_place_content(self, place_link):
+        response = requests.get(place_link)
         response.raise_for_status()
-        content = response.json()
+        return response.json()
+
+    def save_place(self, content):
         place_images = content.get("imgs", [])
         place_desc_short = content.get("description_short", "")
         place_desc_long = content.get("description_long", "")
@@ -23,35 +25,58 @@ class Command(BaseCommand):
             place_lng = content["coordinates"]["lng"]
         except KeyError:
             self.stdout.write(
-                self.style.WARNING("Wrong JSON format."" The place will not be added to database.")
+                self.style.WARNING(
+                    "Wrong JSON format." " The place will not be added to database."
+                )
             )
             return
-
         place, created = Place.objects.get_or_create(
             title=place_title,
-            defaults={"description_short": place_desc_short,
-                      "description_long": place_desc_long,
-                      "lat": place_lat,
-                      "lon": place_lng}
+            defaults={
+                "description_short": place_desc_short,
+                "description_long": place_desc_long,
+                "lat": place_lat,
+                "lon": place_lng,
+                     },
         )
-        if created:
+        self.stdout.write(
+            self.style.SUCCESS(f"Successfully saved place {place_title}")
+        )
+        return {
+            "created": created,
+            "place_images": place_images,
+            "place_title": place_title,
+            "place": place,
+               }
+
+    def save_images(self, place_images, place):
+        for image_count, image_url in enumerate(place_images):
+            image_request = requests.get(image_url)
+            image_request.raise_for_status()
+            image_name = os.path.basename(urlparse(image_url).path)
+            image_file = ContentFile(image_request.content, name=image_name)
+            Image.objects.create(position=image_count, place=place, image=image_file)
             self.stdout.write(
-                self.style.SUCCESS(f'Successfully saved place {place_title}')
+                self.style.SUCCESS(
+                    f"Successfully saved image {image_name} for place {place.title}"
+                )
             )
-            for image_count, image_url in enumerate(place_images):
-                image_request = requests.get(image_url)
-                image_request.raise_for_status()
-                image_name = os.path.basename(urlparse(image_url).path)
-                image_file = ContentFile(image_request.content, name=image_name)
-                Image.objects.create(
-                    position=image_count, place=place, image=image_file
-                )
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f'Successfully saved image {image_name} for place {place_title}'
-                    )
-                )
+            return image_name
+
+    def handle(self, *args, **options):
+        place_content = self.get_place_content(options["download_link"])
+        place_data = self.save_place(place_content)
+
+        created = place_data["created"]
+        place_images = place_data["place_images"]
+        place_title = place_data["place_title"]
+        place = place_data["place"]
+
+        if created:
+            self.save_images(place_images, place)
         else:
             self.stdout.write(
-                self.style.WARNING(f'The place {place_title} has not been saved. Probably it`s already exists')
+                self.style.WARNING(
+                    f"The place {place_title} has not been saved. Probably it`s already exists"
+                )
             )
