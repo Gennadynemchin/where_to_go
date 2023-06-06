@@ -11,6 +11,7 @@ class ImageStackedInline(SortableStackedInline):
     def get_image_preview(self, img):
         return format_html("<img src = {} height = '200'/>", img.image.url)
 
+
 @admin.register(Place)
 class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     list_display = ["title"]

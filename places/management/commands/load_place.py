@@ -22,9 +22,9 @@ class Command(BaseCommand):
             place_lat = content["coordinates"]["lat"]
             place_lng = content["coordinates"]["lng"]
         except KeyError:
-            self.stdout.write(self.style.WARNING("Wrong JSON format."
-                                                 " The place will not be added to database.")
-                              )
+            self.stdout.write(
+                self.style.WARNING("Wrong JSON format."" The place will not be added to database.")
+            )
             return
 
         place, created = Place.objects.get_or_create(
@@ -36,26 +36,22 @@ class Command(BaseCommand):
         )
         if created:
             self.stdout.write(
-                self.style.SUCCESS(f'Successfully saved place {content["title"]}')
+                self.style.SUCCESS(f'Successfully saved place {place_title}')
             )
             for image_count, image_url in enumerate(place_images):
                 image_request = requests.get(image_url)
                 image_request.raise_for_status()
                 image_name = os.path.basename(urlparse(image_url).path)
                 image_file = ContentFile(image_request.content, name=image_name)
-                Image.objects.get_or_create(
+                Image.objects.create(
                     position=image_count, place=place, image=image_file
                 )
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f'Successfully saved image {image_name} for place {content["title"]}'
+                        f'Successfully saved image {image_name} for place {place_title}'
                     )
                 )
         else:
             self.stdout.write(
-                self.style.WARNING(f'The place {content["title"]}'
-                                   f' has not been saved. Probably it`s already exists'
-                                   )
+                self.style.WARNING(f'The place {place_title} has not been saved. Probably it`s already exists')
             )
-
-
