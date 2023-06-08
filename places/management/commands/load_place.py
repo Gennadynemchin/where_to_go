@@ -37,14 +37,14 @@ class Command(BaseCommand):
                 "description_long": place_desc_long,
                 "lat": place_lat,
                 "lon": place_lng,
-                     },
+            },
         )
         return {
             "created": created,
             "place_images": place_images,
             "place_title": place_title,
             "place": place,
-               }
+        }
 
     def save_images(self, place_images, place):
         for image_count, image_url in enumerate(place_images):
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     f"Successfully saved image {image_name} for place {place.title}"
                 )
             )
-        return image_name
+        return
 
     def handle(self, *args, **options):
         place_content = self.get_place_content(options["download_link"])
@@ -76,7 +76,5 @@ class Command(BaseCommand):
                 )
             )
             return
-        self.stdout.write(
-            self.style.SUCCESS(f"Successfully saved place {place_title}")
-        )
+        self.stdout.write(self.style.SUCCESS(f"Successfully saved place {place_title}"))
         self.save_images(place_images, place)
