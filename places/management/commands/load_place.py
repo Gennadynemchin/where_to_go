@@ -61,7 +61,9 @@ class Command(BaseCommand):
                     f"Successfully saved image {image_name} for place {place.title}"
                 )
             )
-        return
+        return self.stdout.write(
+            self.style.SUCCESS(f"All images for place {place.title} successfully saved")
+        )
 
     def handle(self, *args, **options):
         place_content = self.get_place_content(options["download_link"])
